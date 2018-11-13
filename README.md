@@ -40,13 +40,16 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
   * `/src/App.js`
   * `/src/server/index.js`
 * Find the `TODO` comments in these files
+* This challenge should take around 4 hours
 
 ### Guidelines
 1. Install and use any packages you wish.
 1. Add any folders and files you may need to organize your code.
-1. Try to timebox no more than 2-3 hours for this exercise. 
+1. Please spend no more than 4 hours for this exercise.
 
 ### Acceptance Criteria
+**Please meet as many of the following criteria as you can in the allotted time**
+
 1. Implement a simple form using React/Redux that accepts a numeric id value. This id corresponds to one of our original video series (`seriesId`).
    * Sample test values:
      1. `122881`
