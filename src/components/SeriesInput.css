@@ -1,0 +1,23 @@
+.seriesinput_input{
+	padding:5px;
+}
+.seriesinput_component{
+	padding:25px 0px;
+}
+.seriesinput_box{
+	display: inline-block;
+	vertical-align: bottom
+}
+.seriesinput_button{
+	margin-left:15px;
+	padding:10px 35px;
+	color:white;
+	font-size:18px;
+	cursor: pointer;
+	border:transparent;
+	background:#2E8B58;
+}
+.seriesinput_error{
+	padding-top:5px;
+	color:#f02;
+}

@@ -1,0 +1,29 @@
+.seriesinfo_hero{
+	width:100%;
+	max-height:500px;
+}
+.seriesinfo_main{
+	display: inline-block;vertical-align: top;
+	width:600px;
+	min-height:300px;
+}
+.seriesinfo_episodes{
+	display: inline-block;vertical-align: top;
+	width:400px;
+	text-align: left;
+}
+.seriesinfo_title{
+	padding:100px 20px;
+	text-align: center;
+	font-weight: bold;
+	font-size:20px;
+}
+.seriesinfo_episodes_title{
+	font-size:18px;
+	padding-top:10px;
+	font-weight: bold;
+}
+.seriesinfo_episodes_list{
+	padding:10px;
+	font-size:14px;
+}

@@ -1,35 +1,67 @@
 const express = require('express')
 const app = express()
+const fetch = require("node-fetch");
+const bodyParser = require('body-parser');
+var methodOverride = require('method-override')
 const port = 9001
-
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+  next();
+});
 app.get('/series-videos', async (req, res, next) => {
-  /**
-   * TODO: implement node call
-   * - Parameterize seriesId to be sent from client application
-   * - All series are nodes, but not all nodes are series.  So we can pass seriesId to /node
-   * - https://brooklyn.gaia.com/node/[:seriesId]
-   *   - Data from this endpoint will look like exampleNodeData below
-   *   - Datapoints to use:
-   *     - Series hero art -- node.hero_image.hero_1070x400
-   *     - Series title -- node.title
-
-   * TODO: implement series episodes call
-   * - Parameterize seriesId to be sent from client application
-   * - https://brooklyn.gaia.com/v2/videos/series/[:seriesId]
-   *   - Data from this endpoint wil look like exampleSeriesEpisodesData
-
-   *  return {
-   *    seriesHeroArt: string,
-   *    seriesTitle: string,
-   *    episodeList: [..., { basicEpisode }, ...], // see README for basicEpisode definition
-   *  }
-   */
-
-  return {
-    mock: true,
+  if(!req.query.seriesId){
+    return next('invalid_series_id')
   }
+  const nodeUrl='https://brooklyn.gaia.com/node/'+req.query.seriesId;
+  const seriesUrl='https://brooklyn.gaia.com/v2/videos/series/'+req.query.seriesId
+  const timeouturl='https://badurlfortimeout.com';//timeouturl/bad response
+  //in practice, based on result data, I would group these two
+  //requests and run them in paralell because neither is dependant
+  //on the other...but the instructions say one then the other...
+    fetch((req.query.forceTimeout)?timeouturl:nodeUrl,{
+      timeout:5000//5000 ms timeout, throw NW error if no response in alloted time
+    })
+    .then(res => res.json())
+    .then(nodeJson => {
+      if(nodeJson.errors){
+        throw new Error(nodeJson.errors[0].title)
+      }
+      fetch(seriesUrl,{
+        timeout:5000//5000 ms timeout, throw NW error if no response in alloted time
+      })
+        .then(res => res.json())
+        .then(seriesJson => {
+          var resp={
+            seriesHeroArt: (nodeJson.hero_image&&nodeJson.hero_image.hero_1070x400)?nodeJson.hero_image.hero_1070x400:'',
+            seriesTitle: (nodeJson.title)?nodeJson.title:'',
+            episodeList: []
+          }
+          if(seriesJson.videos&&seriesJson.videos.length){
+            seriesJson.videos.forEach(episode=>{
+              resp.episodeList.push({
+                episodeTitle:episode.title,
+                episodeNumber:episode.episode
+              })
+            })
+          }
+          res.json(resp);
+        }).catch(error=>{
+        return next(error.message);
+      });
+    }).catch(error=>{
+      return next(error.message);
+    });
 })
-
+app.use(methodOverride())
+app.use(function (err, req, res, next) {
+  if(res.headersSent){
+    return next(err)
+  }
+  res.status(200)
+  res.send({error:err})
+})
 app.listen(port, () => console.log(`Congrats, the server is running.  Serving from port: ${port}`))
 
 /**
