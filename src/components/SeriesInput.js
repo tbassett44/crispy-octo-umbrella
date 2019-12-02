@@ -10,20 +10,35 @@ class SeriesInput extends Component {
       seriesId:0,
       loading:0,
       error:'',
+      viewing:'',
       seriesData:false
     }
   }
   loadSeries(e){
+    e.preventDefault();
     if(this.state.loading){
       return console.warn('waiting for a request to finish')
     }
+    if(!e.target.elements.seriesId.value){
+        this.setState({loading:0,error:'Please Enter a Series Id'});
+        return false;
+    }
+    if(this.state.viewing===e.target.elements.seriesId.value){
+      return console.warn('Already Viewing page!')
+    }
+    let withoutChars=e.target.elements.seriesId.value.replace(/[^0-9]/g, "");
+    if(e.target.elements.seriesId.value!==withoutChars){
+        this.setState({loading:0,error:'Invalid Series ID: Series IDs only have numbers'});
+        return false;
+    }
     const url='http://localhost:9001/series-videos?seriesId='+e.target.elements.seriesId.value;
     this.setState({
-      loading:1
+      loading:1,
+      viewing:e.target.elements.seriesId.value
     })
     fetch(url).then(res => res.json()).then(json =>{
       if(json.error){
-        this.setState({error:json.error,loading:0})
+        this.setState({error:json.error,loading:0,viewing:''})
       }else{
         this.setState({loading:0,error:''});
         this.props.dispatch({
@@ -32,7 +47,6 @@ class SeriesInput extends Component {
         });
       }
     })
-    e.preventDefault();
     return false;//prevent 
   }
   render() {

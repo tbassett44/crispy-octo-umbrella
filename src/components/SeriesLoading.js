@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
+import './SeriesLoading.css';
 class SeriesLoading extends Component {
 	render(){
 		if(this.props.state.loading){
@@ -9,7 +10,7 @@ class SeriesLoading extends Component {
 		}else{
 			if(this.props.state.error){
 				return (
-					<div>Error: {this.props.state.error}</div>
+					<div className="seriesloading_error">{this.props.state.error}</div>
 				)
 			}else{
 				return '';
