@@ -29,6 +29,7 @@ class SeriesInfo extends Component {
         </div>
       );
     }else{
+      let alt="Hero Image";
       var el=this.state.SeriesData.episodeList;
       var episodes= Object.keys(el).map(function(key) {
         return <div>{el[key].episodeNumber}. {el[key].episodeTitle}</div>
@@ -36,7 +37,7 @@ class SeriesInfo extends Component {
       return (
         <div>
           <div>
-            <img src={this.state.SeriesData.seriesHeroArt} className="seriesinfo_hero" />
+            <img src={this.state.SeriesData.seriesHeroArt} alt={alt} className="seriesinfo_hero" />
           </div>
           <div>
             <div className="seriesinfo_main">
